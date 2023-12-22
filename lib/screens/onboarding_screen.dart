@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meals_on_wheels/components/page_indicator.dart';
 import 'package:meals_on_wheels/screens/login_screen.dart';
 import 'package:meals_on_wheels/utils/english_text.dart';
 import 'package:meals_on_wheels/utils/my_colors.dart';
@@ -14,8 +15,7 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
-  var _dot1color = MyColors.orange;
-  var _dot2color = MyColors.lightGrey;
+  int _pageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +46,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 SizedBox(
                   height: 96,
                   child: PageView(
-                    onPageChanged: onTextSwiped,
+                    onPageChanged: (index) {
+                      setState(() {
+                        _pageIndex = index;
+                      });
+                    },
                     children: [
                       twoLineText(
                         title: EnglishText.appName,
@@ -65,18 +69,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.circle_rounded,
-                      size: 10,
-                      color: _dot1color,
-                    ),
-                    const SizedBox(
-                      width: 2,
-                    ),
-                    Icon(
-                      Icons.circle_rounded,
-                      size: 10,
-                      color: _dot2color,
+                    ...List.generate(
+                      2,
+                      (index) {
+                        return PageIndicator(isActive: _pageIndex == index);
+                      },
                     ),
                   ],
                 ),
@@ -106,18 +103,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         ),
       ),
     );
-  }
-
-  void onTextSwiped(int index) {
-    index == 0
-        ? setState(() {
-            _dot1color = MyColors.orange;
-            _dot2color = MyColors.lightGrey;
-          })
-        : setState(() {
-            _dot1color = MyColors.lightGrey;
-            _dot2color = MyColors.orange;
-          });
   }
 
   SizedBox twoLineText({
